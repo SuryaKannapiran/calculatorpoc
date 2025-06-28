@@ -1,6 +1,6 @@
-# Intercom Pricing Calculator
+#  Pricing Calculator
 
-A dynamic, interactive pricing calculator for Intercom services built with React. This calculator allows users to configure their plan requirements and add-ons using intuitive sliders, with real-time price calculations based on the provided JSON pricing data.
+A dynamic, interactive pricing calculator. This calculator allows users to configure their plan requirements and add-ons using intuitive sliders, with real-time price calculations based on the provided JSON pricing data.
 
 ## Features
 

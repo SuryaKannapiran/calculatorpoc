@@ -29,10 +29,46 @@ const getLayoutSchema = () => {
   }
 };
 
+function getDefaultLayout() {
+  return {
+    "columns": [
+      {
+        "id": "main-column",
+        "content": [
+          {
+            "type": "card",
+            "id": "welcome-card",
+            "content": [
+              {
+                "type": "display-item",
+                "id": "welcome-text",
+                "content": []
+              }
+            ],
+            "elevated": true,
+            "collapsible": false
+          }
+        ],
+        "width": "100%",
+        "className": "main-content"
+      }
+    ],
+    "theme": {
+      "spacing": "normal",
+      "borderRadius": "medium",
+      "colorScheme": "light"
+    },
+    "className": "app-layout"
+  };
+}
+
 // Layout update endpoint
 app.post('/layout/update', async (req, res) => {
   try {
-    const { currentLayout, userPrompt } = req.body;
+    let { currentLayout, userPrompt } = req.body;
+    if (!currentLayout) {
+      currentLayout = getDefaultLayout();
+    }
     console.log('currentLayout', JSON.stringify(req.body, null, 2));
     console.log('currentLayout', JSON.stringify(currentLayout, null, 2));
     console.log('userPrompt', userPrompt);

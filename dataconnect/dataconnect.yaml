@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "calculatorpoc"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "calculatorpoc-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

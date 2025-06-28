@@ -33,7 +33,9 @@ const getLayoutSchema = () => {
 app.post('/layout/update', async (req, res) => {
   try {
     const { currentLayout, userPrompt } = req.body;
-
+    console.log('currentLayout', JSON.stringify(req.body, null, 2));
+    console.log('currentLayout', JSON.stringify(currentLayout, null, 2));
+    console.log('userPrompt', userPrompt);
     if (!currentLayout || !userPrompt) {
       return res.status(400).json({
         error: 'Missing required fields: currentLayout and userPrompt'

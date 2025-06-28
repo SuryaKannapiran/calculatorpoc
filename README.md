@@ -161,4 +161,61 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Support
 
-For support or questions, please open an issue in the repository. 
+For support or questions, please open an issue in the repository.
+
+## Testing the Layout Editor API (for Developers)
+
+You can test the `/layout/update` endpoint directly using `curl` or any API client. This is useful for developers who want to verify backend behavior or integrate with other systems.
+
+### Example: Test with curl
+
+This example sends a layout and a prompt to the deployed Railway backend and returns the updated layout JSON from OpenAI:
+
+```bash
+curl --location 'https://calculatorpoc-production.up.railway.app/layout/update' \
+--header 'Content-Type: application/json' \
+--data '{
+    "currentLayout": {
+        "columns": [
+            {
+                "id": "main-column",
+                "content": [
+                    {
+                        "type": "card",
+                        "id": "welcome-card",
+                        "content": [
+                            {
+                                "type": "display-item",
+                                "id": "welcome-text",
+                                "content": []
+                            }
+                        ],
+                        "elevated": true,
+                        "collapsible": false
+                    }
+                ],
+                "width": "100%",
+                "className": "main-content"
+            }
+        ],
+        "theme": {
+            "spacing": "normal",
+            "borderRadius": "medium",
+            "colorScheme": "light"
+        },
+        "className": "app-layout"
+    },
+    "userPrompt": "Add a slider"
+}'
+```
+
+**What this does:**
+- Sends your current layout and a natural language prompt ("Add a slider") to the backend.
+- The backend uses OpenAI to generate an updated layout JSON.
+- The response will be the new layout JSON, which you can use in your app or for debugging.
+
+**Tip:**
+- You can change the `userPrompt` to test different layout changes.
+- If you omit `currentLayout`, the backend will use a default layout.
+
+--- 

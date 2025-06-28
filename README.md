@@ -214,6 +214,12 @@ curl --location 'https://calculatorpoc-production.up.railway.app/layout/update' 
 - The backend uses OpenAI to generate an updated layout JSON.
 - The response will be the new layout JSON, which you can use in your app or for debugging.
 
+** Prompts:
+- "Add a slider with name as No of Users"
+- "Create a new card section for user preferences"
+- "Add a row with two input fields"
+- "Remove the slider"
+
 **Tip:**
 - You can change the `userPrompt` to test different layout changes.
 - If you omit `currentLayout`, the backend will use a default layout.

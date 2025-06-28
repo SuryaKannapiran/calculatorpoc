@@ -1,0 +1,171 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/layout-config.schema.json",
+    "title": "LayoutConfig",
+    "type": "object",
+    "required": ["columns"],
+    "properties": {
+      "columns": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/Column" }
+      },
+      "theme": {
+        "type": "object",
+        "properties": {
+          "spacing": { "enum": ["compact", "normal", "spacious"] },
+          "borderRadius": { "enum": ["none", "small", "medium", "large"] },
+          "colorScheme": { "enum": ["light", "dark", "auto"] }
+        },
+        "additionalProperties": false
+      },
+      "className": { "type": "string" }
+    },
+    "$defs": {
+      "Column": {
+        "type": "object",
+        "required": ["id", "content"],
+        "properties": {
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          },
+          "width": { "type": "string" },
+          "minWidth": { "type": "string" },
+          "weight": { "type": "number" },
+          "className": { "type": "string" }
+        }
+      },
+      "ContentItem": {
+        "type": "object",
+        "required": ["type", "id"],
+        "oneOf": [
+          { "$ref": "#/$defs/Card" },
+          { "$ref": "#/$defs/Section" },
+          { "$ref": "#/$defs/Row" },
+          { "$ref": "#/$defs/ControlGroup" },
+          { "$ref": "#/$defs/DisplayItem" },
+          { "$ref": "#/$defs/SliderControl" },
+          { "$ref": "#/$defs/InputControl" },
+          { "$ref": "#/$defs/SelectControl" },
+          { "$ref": "#/$defs/DisplayValueControl" }
+        ]
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "card" },
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          },
+          "elevated": { "type": "boolean" },
+          "collapsible": { "type": "boolean" }
+        },
+        "required": ["type", "id", "content"]
+      },
+      "Section": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "section" },
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          },
+          "divider": { "type": "boolean" }
+        },
+        "required": ["type", "id", "content"]
+      },
+      "Row": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "row" },
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          },
+          "align": {
+            "enum": ["start", "center", "end", "space-between", "space-around"]
+          },
+          "wrap": { "type": "boolean" }
+        },
+        "required": ["type", "id", "content"]
+      },
+      "ControlGroup": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "control-group" },
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          }
+        },
+        "required": ["type", "id", "content"]
+      },
+      "DisplayItem": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "display-item" },
+          "id": { "type": "string" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ContentItem" }
+          }
+        },
+        "required": ["type", "id", "content"]
+      },
+      "SliderControl": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "slider" },
+          "id": { "type": "string" },
+          "min": { "type": "number" },
+          "max": { "type": "number" },
+          "step": { "type": "number" },
+          "showInput": { "type": "boolean" },
+          "showValue": { "type": "boolean" }
+        },
+        "required": ["type", "id"]
+      },
+      "InputControl": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "input" },
+          "id": { "type": "string" },
+          "inputType": { "enum": ["number", "text"] },
+          "placeholder": { "type": "string" },
+          "prefix": { "type": "string" },
+          "suffix": { "type": "string" }
+        },
+        "required": ["type", "id"]
+      },
+      "SelectControl": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "select" },
+          "id": { "type": "string" },
+          "placeholder": { "type": "string" }
+        },
+        "required": ["type", "id"]
+      },
+      "DisplayValueControl": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "display-value" },
+          "id": { "type": "string" },
+          "format": {
+            "enum": ["number", "currency", "percentage", "text"]
+          },
+          "precision": { "type": "number" },
+          "prefix": { "type": "string" },
+          "suffix": { "type": "string" }
+        },
+        "required": ["type", "id"]
+      }
+    }
+  }
+  

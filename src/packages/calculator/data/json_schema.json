@@ -1,0 +1,77 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "GenericPricingSchema",
+    "type": "object",
+    "properties": {
+      "vendor": { "type": "string" },
+      "url": { "type": "string", "format": "uri" },
+      "currency": { "type": "string" },
+      "plans": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/pricingEntity" }
+      },
+      "addons": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/pricingEntity" }
+      }
+    },
+    "required": ["vendor", "url", "currency", "plans", "addons"],
+    "definitions": {
+      "quota": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string" },
+          "unit": { "type": "string" }
+        },
+        "required": ["value", "unit"]
+      },
+      "pricingEntity": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "unit": { "type": "string" },
+          "unit_price": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]{1,6})?$"
+          },
+          "pricing_model": {
+            "type": "string",
+            "enum": ["per_unit", "flat", "tiered"]
+          },
+          "billing_frequency": {
+            "type": "string",
+            "enum": ["monthly", "yearly", "one_time"]
+          },
+          "included_quotas": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/definitions/quota" }
+          },
+          "features": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "available_addons": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "formula": { "type": "string" }
+        },
+        "required": [
+          "id",
+          "label",
+          "description",
+          "unit",
+          "unit_price",
+          "pricing_model",
+          "billing_frequency",
+          "included_quotas",
+          "features",
+          "available_addons",
+          "formula"
+        ]
+      }
+    }
+  }
+  

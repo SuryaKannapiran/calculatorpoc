@@ -3,6 +3,8 @@ const cors = require('cors');
 const OpenAI = require('openai');
 const fs = require('fs');
 const path = require('path');
+const { updateCalculatorPrompt } = require('./updateCalculatorPrompt');
+const { newCalculatorPrompt } = require('./newCalculatorPrompt');
 require('dotenv').config();
 
 const app = express();
@@ -66,64 +68,18 @@ function getDefaultLayout() {
 app.post('/layout/update', async (req, res) => {
   try {
     let { currentLayout, userPrompt } = req.body;
-    if (!currentLayout) {
-      currentLayout = getDefaultLayout();
+
+    let prompt = {}
+    if (currentLayout) {
+      prompt = updateCalculatorPrompt(userPrompt, currentLayout);
+    } else {
+      prompt = newCalculatorPrompt(userPrompt);
     }
-    console.log('currentLayout', JSON.stringify(req.body, null, 2));
-    console.log('currentLayout', JSON.stringify(currentLayout, null, 2));
-    console.log('userPrompt', userPrompt);
-    if (!currentLayout || !userPrompt) {
-      return res.status(400).json({
-        error: 'Missing required fields: currentLayout and userPrompt'
-      });
-    }
-
-    const layoutSchema = getLayoutSchema();
-    if (!layoutSchema) {
-      return res.status(500).json({
-        error: 'Failed to load layout schema'
-      });
-    }
-
-    // Create the prompt for OpenAI
-    const systemPrompt = `You are a UI layout configuration expert. You will receive a current JSON layout configuration and a user's natural language request to modify it. 
-
-Your task is to:
-1. Understand the current layout structure
-2. Interpret the user's request
-3. Return an updated JSON layout that follows the schema exactly
-4. Make incremental changes - don't replace the entire layout unless specifically requested
-5. Ensure all IDs are unique and descriptive
-6. Maintain the existing structure while adding/modifying elements as requested
-
-The layout schema supports these content types:
-- card: Container with elevated styling and optional collapsible behavior
-- section: Content section with optional divider
-- row: Horizontal layout with alignment options
-- control-group: Group of related controls
-- display-item: Display-only content
-- slider: Range input control
-- input: Text or number input
-- select: Dropdown selection
-- display-value: Formatted value display
-
-JSON Schema:
-${JSON.stringify(layoutSchema, null, 2)}
-
-Always return valid JSON that strictly follows the schema above.`;
-
-    const userMessage = `Current Layout JSON:
-${JSON.stringify(currentLayout, null, 2)}
-
-User Request: "${userPrompt}"
-
-Please return the updated layout JSON that incorporates the requested changes. Only return the JSON, no explanations.`;
-
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
+        { role: "system", content: prompt.systemPrompt },
+        { role: "user", content: prompt.userPrompt }
       ],
       temperature: 0.3,
       max_tokens: 2000

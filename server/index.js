@@ -19,51 +19,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Read the JSON schema
-const getLayoutSchema = () => {
-  try {
-    const schemaPath = path.join(__dirname, '../src/data/json_schema_layout.json');
-    const schemaContent = fs.readFileSync(schemaPath, 'utf8');
-    return JSON.parse(schemaContent);
-  } catch (error) {
-    console.error('Error reading layout schema:', error);
-    return null;
-  }
-};
-
-function getDefaultLayout() {
-  return {
-    "columns": [
-      {
-        "id": "main-column",
-        "content": [
-          {
-            "type": "card",
-            "id": "welcome-card",
-            "content": [
-              {
-                "type": "display-item",
-                "id": "welcome-text",
-                "content": []
-              }
-            ],
-            "elevated": true,
-            "collapsible": false
-          }
-        ],
-        "width": "100%",
-        "className": "main-content"
-      }
-    ],
-    "theme": {
-      "spacing": "normal",
-      "borderRadius": "medium",
-      "colorScheme": "light"
-    },
-    "className": "app-layout"
-  };
-}
-
 // Layout update endpoint
 app.post('/layout/update', async (req, res) => {
   try {
@@ -84,8 +39,9 @@ app.post('/layout/update', async (req, res) => {
       temperature: 0.3,
       max_tokens: 2000
     });
-
-    const updatedLayout = JSON.parse(completion.choices[0].message.content);
+    console.log('OpenAI response:', completion.choices[0].message);
+    const content = completion.choices[0].message.content;
+    const updatedLayout = parseLayoutFromCompletion(content)
 
     res.json({
       success: true,
@@ -101,6 +57,28 @@ app.post('/layout/update', async (req, res) => {
     });
   }
 });
+
+function parseLayoutFromCompletion(content) {
+  try {
+    // First attempt: parse the whole string
+    return JSON.parse(content);
+  } catch (e) {
+    // If parsing fails, look for ```json blocks
+    const jsonBlockMatch = content.match(/```json\s*([\s\S]*?)```/i);
+    if (jsonBlockMatch) {
+      const jsonText = jsonBlockMatch[1];
+      try {
+        return JSON.parse(jsonText);
+      } catch (innerError) {
+        throw new Error(
+          `Failed to parse JSON inside \`\`\`json block:\n${innerError.message}`
+        );
+      }
+    }
+    throw new Error(`Failed to parse JSON from completion content:\n${e.message}`);
+  }
+}
+
 
 // Health check endpoint
 app.get('/health', (req, res) => {

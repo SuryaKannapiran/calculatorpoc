@@ -1,6 +1,6 @@
 const fs = require('fs');
 const newCalculatorPrompt = (userMessage) => {
-    const systemPrompt = fs.readFileSync('./server/prompts/newCalculatorPromptTemplate.md', 'utf8');
+    const systemPrompt = fs.readFileSync('./server/prompts/newCalculatorPrompt.md', 'utf8');
 
     const userPrompt = `
 User Request: "${userMessage}"

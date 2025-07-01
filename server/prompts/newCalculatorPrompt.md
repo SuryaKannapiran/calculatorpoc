@@ -206,7 +206,7 @@ Use only the **exact control IDs** (with underscores) in all calculation express
 * Basic math: `quantity * price`
 * Conditionals: `users >= 50 ? users * 12 : users * 15`
 * Tiered pricing: `users <= 10 ? users * 25 : users <= 50 ? 10 * 25 + (users - 10) * 20 : 10 * 25 + 40 * 20 + (users - 50) * 15`
-* Math functions: `max(minimum_fee, users * rate)`
+* Math functions: `max(minimum_fee, users * rate)`. Limited to max, min, abs, round, floor, ceil, sqrt, pow.
 * Complex logic: `plan === 'basic' ? 100 : plan === 'pro' ? 300 : 800`
 
 **Do NOT use:**
@@ -214,6 +214,7 @@ Use only the **exact control IDs** (with underscores) in all calculation express
 * Hyphens: ❌ `team-size`
 * Different naming: ❌ `users` if ID is `user_count`
 * Do not refer another computed variable in an expression, always use input control ID in the expression, not the ouput control ID.
+* Do not use any other inbuilt js methods or other methods. Only mathematical expressions, ternary operators, and conditions.
 
 **Do use:**
 

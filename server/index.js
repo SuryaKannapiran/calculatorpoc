@@ -48,7 +48,7 @@ app.post('/layout/update', async (req, res) => {
     });
     const geminiData = await geminiResponse.json();
     console.log('Gemini response:', geminiData);
-    const updatedLayout = JSON.parse(geminiData.candidates[0].content.parts[0].text);
+    const updatedLayout = parseLayoutFromCompletion(geminiData.candidates[0].content.parts[0].text);
 
     res.json({
       success: true,

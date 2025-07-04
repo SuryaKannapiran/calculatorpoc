@@ -33,7 +33,7 @@ app.post('/layout/update', async (req, res) => {
     const fetch = require('node-fetch');
 
     const geminiApiKey = process.env.GEMINI_API_KEY; // Set this in your .env
-    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + geminiApiKey;
+    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + geminiApiKey;
     
     const geminiBody = {
       contents: [

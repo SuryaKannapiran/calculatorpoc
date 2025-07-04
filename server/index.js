@@ -30,18 +30,25 @@ app.post('/layout/update', async (req, res) => {
     } else {
       prompt = newCalculatorPrompt(userPrompt);
     }
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        { role: "system", content: prompt.systemPrompt },
-        { role: "user", content: prompt.userPrompt }
-      ],
-      temperature: 0.3,
-      max_tokens: 2000
+    const fetch = require('node-fetch');
+
+    const geminiApiKey = process.env.GEMINI_API_KEY; // Set this in your .env
+    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + geminiApiKey;
+    
+    const geminiBody = {
+      contents: [
+        { role: "user", parts: [{ text: prompt.systemPrompt + "\n" + prompt.userPrompt }] }
+      ]
+    };
+    
+    const geminiResponse = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(geminiBody)
     });
-    console.log('OpenAI response:', completion.choices[0].message);
-    const content = completion.choices[0].message.content;
-    const updatedLayout = parseLayoutFromCompletion(content)
+    const geminiData = await geminiResponse.json();
+    console.log('Gemini response:', geminiData);
+    const updatedLayout = JSON.parse(geminiData.candidates[0].content.parts[0].text);
 
     res.json({
       success: true,
